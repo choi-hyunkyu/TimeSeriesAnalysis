@@ -48,6 +48,7 @@ print(original_data_df.head())
 '''
 original_data_df['Month'] = original_data_df['Month'].str.replace(pat=r'[^\w\s]', repl=r'', regex=True) # 하이픈제거
 original_data_df = original_data_df.astype('int')
+print(original_data_df.head())
 
 '''
 train, test data 분리
