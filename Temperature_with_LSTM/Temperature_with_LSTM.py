@@ -83,7 +83,7 @@ print("validation df shape:", validation_data_df.shape)
 print("test df shape:", test_data_df.shape)
 
 '''
-unnecessary index drop, train & target seperate
+input & label seperate
 '''
 x_train_data_df = train_data_df[['frontyear', 'backyear', 'month', 'day', 'season']]
 y_train_data_df = train_data_df[['temp_avg', 'temp_min', 'temp_max']]
