@@ -19,8 +19,6 @@ original_data_df.head()
 
 '''
 check missing value
-
-1950.09.01 ~ 1953.11.30 전쟁 기간동안 온도에 대한 기록이 없음
 '''
 original_data_df.isnull().sum()
 
