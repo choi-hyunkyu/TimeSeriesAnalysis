@@ -59,7 +59,7 @@ for season in original_data_df:
 original_data_df.head()
 
 '''
-train data scaling
+data scaling
 '''
 max_abs_scaler = MaxAbsScaler()
 
