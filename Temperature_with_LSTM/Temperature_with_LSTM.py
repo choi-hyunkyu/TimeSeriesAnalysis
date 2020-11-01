@@ -123,7 +123,7 @@ hidden_size = 32
 num_layers = 3
 output_size = 3 # Trend, Seasonal, Residual
 learning_rate = 1e-5
-nb_epochs = 400
+nb_epochs = 2000
 
 '''
 데이터셋함수
@@ -178,7 +178,7 @@ class Net(nn.Module):
             input_size = input_size,
             hidden_size = hidden_size,
             num_layers = num_layers,
-            dropout = 0.3,
+            dropout = 0.5,
             batch_first = True
         )
         self.fc = nn.Linear(
@@ -325,6 +325,19 @@ reshaped_test_original_df = pd.concat([x_test_data_df, test_original_df], axis =
 reshaped_test_result_df = pd.concat([x_test_data_df, test_result_df], axis = 1)
 
 '''
+inverse transform 실행 전 컬럼 위치 변경
+'''
+reshaped_test_original_df.info
+reshaped_test_original_df.columns = ['frontyear', 'backyear', 'month', 'day', 'season', 'O_temp_avg', 'O_temp_min', 'O_temp_max']
+reshaped_test_result_df.columns = ['frontyear', 'backyear', 'month', 'day', 'season', 'R_temp_avg', 'R_temp_min', 'R_temp_max']
+
+reshaped_test_original_df = reshaped_test_original_df[['frontyear', 'backyear', 'month', 'day', 'O_temp_avg', 'O_temp_min', 'O_temp_max', 'season']]
+reshaped_test_result_df = reshaped_test_result_df[['frontyear', 'backyear', 'month', 'day', 'R_temp_avg', 'R_temp_min', 'R_temp_max', 'season']]
+
+print(reshaped_test_original_df.head())
+print(reshaped_test_result_df.head())
+
+'''
 예측 데이터 데이터프레임 변환
 '''
 inversed_test_original_np = max_abs_scaler.inverse_transform(reshaped_test_original_df)
@@ -336,8 +349,8 @@ inversed_test_result_df = pd.DataFrame(inversed_test_result_np)
 '''
 데이터프레임 columns 이름 변경
 '''
-inversed_test_original_df.columns = [['frontyear', 'backyear', 'month', 'day', 'season', 'O_temp_avg', 'O_temp_min', 'O_temp_max']]
-inversed_test_result_df.columns = [['frontyear', 'backyear', 'month', 'day', 'season', 'P_temp_avg', 'P_temp_min', 'P_temp_max']]
+inversed_test_original_df.columns = [['frontyear', 'backyear', 'month', 'day', 'O_temp_avg', 'O_temp_min', 'O_temp_max', 'season']]
+inversed_test_result_df.columns = [['frontyear', 'backyear', 'month', 'day', 'P_temp_avg', 'P_temp_min', 'P_temp_max', 'season']]
 
 dropped_test_original_df = inversed_test_original_df[['O_temp_avg', 'O_temp_min', 'O_temp_max']]
 dropped_test_result_df = inversed_test_result_df[['P_temp_avg', 'P_temp_min', 'P_temp_max']]
@@ -345,8 +358,36 @@ dropped_test_result_df = inversed_test_result_df[['P_temp_avg', 'P_temp_min', 'P
 '''
 결과 데이터 시각화
 '''
+
+# average
+print("Average temperature")
 plt.figure(figsize = (16, 9))
 plt.plot(dropped_test_original_df[['O_temp_avg']], label = 'Original')
 plt.plot(dropped_test_result_df[['P_temp_avg']], label = 'Prediction')
+plt.legend(loc = 'upper right')
+plt.show()
+
+# maximum
+print("Maximum temperature")
+plt.figure(figsize = (16, 9))
+plt.plot(dropped_test_original_df[['O_temp_max']], label = 'Original')
+plt.plot(dropped_test_result_df[['P_temp_max']], label = 'Prediction')
+plt.legend(loc = 'upper right')
+plt.show()
+
+# minimum
+print("Minimum temperature")
+plt.figure(figsize = (16, 9))
+plt.plot(dropped_test_original_df[['O_temp_min']], label = 'Original')
+plt.plot(dropped_test_result_df[['P_temp_min']], label = 'Prediction')
+plt.legend(loc = 'upper right')
+plt.show()
+
+
+# average[Ni:Nj]
+print("Average temperature")
+plt.figure(figsize = (16, 9))
+plt.plot(dropped_test_original_df[['O_temp_avg']][100:150], label = 'Original')
+plt.plot(dropped_test_result_df[['P_temp_avg']][100:150], label = 'Prediction')
 plt.legend(loc = 'upper right')
 plt.show()
