@@ -23,7 +23,7 @@ check missing value
 original_data_df.isnull().sum()
 
 '''
-change missing value from behind value
+change missing value from front value
 '''
 original_data_df.fillna(method = 'ffill', inplace = True)
 original_data_df.isnull().sum()
